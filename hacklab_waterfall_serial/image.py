@@ -27,7 +27,7 @@ def send_bytes(bytes):
 def main():
     bytes = [0]*8
 
-    for y in range(64):
+    for y in range(im.size[1]):
         for i in range(8):
             bytes[i] = 0
             for x in range(8):
@@ -49,7 +49,13 @@ else:
     ser = None
 
 im = Image.open(filename)
-im.draft('1', (64, 64))
+(width, height) = im.size
+new_width = 64
+new_height = int(float(new_width)/float(width) * float(height))
+im = im.convert("1", dither=Image.NONE)
+im = im.resize((new_width, new_height))
+im = im.transpose(Image.FLIP_TOP_BOTTOM)
+#im.draft('1', (new_width, new_height))
 #im.show()
 
 while True:
