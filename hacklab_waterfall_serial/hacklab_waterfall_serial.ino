@@ -1,9 +1,9 @@
 //Pin connected to ST_CP of 74HC595
-int latchPin = 8;
+int latchPin = A0;
 //Pin connected to SH_CP of 74HC595
-int clockPin = 12;
+int clockPin = A2;
 ////Pin connected to DS of 74HC595
-int dataPin = 11;
+int dataPin = A3;
 
 int ledPin = 13;
 
