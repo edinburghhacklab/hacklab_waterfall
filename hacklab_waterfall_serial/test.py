@@ -7,7 +7,8 @@ import sys
 import time
 
 device = sys.argv[1]
-delay = float(sys.argv[2])
+mode = sys.argv[2]
+delay = float(sys.argv[3])
 
 class Controller(object):
     def __init__(self, ser=None):
@@ -34,7 +35,7 @@ class Controller(object):
         output = 0
         for i in range(0, 8):
             if self.bits[offset+i]:
-                output += 1<<i
+                output += 1<<7-i
         return output
     def get_bytes(self):
         output = []
@@ -89,9 +90,14 @@ if device != "":
 else:
     controller = Controller()
 
-while True:
-    #sweep()
-    #bounce()
-    #pulse()
-    rand()
+if mode == "sweep":
+    fn = sweep
+elif mode == "bounce":
+    fn = bounce
+elif mode == "pulse":
+    fn = pulse
+else:
+    fn = rand
     
+while True:
+    fn()

@@ -7,9 +7,8 @@ import sys
 import time
 
 device = sys.argv[1]
-#ser = serial.Serial(device, baudrate=115200)
-delay = float(sys.argv[2])
-filename = sys.argv[3]
+filename = sys.argv[2]
+delay = float(sys.argv[3])
 
 def print_bytes(bytes):
     for a in range(0, len(bytes)):
@@ -22,24 +21,37 @@ def print_bytes(bytes):
     sys.stdout.flush()
 
 def send_bytes(bytes):
-    ser.write(chr(len(bytes)), struct.pack('%sB' % len(bytes), *bytes))
+    ser.write(chr(len(bytes)) + struct.pack('%sB' % len(bytes), *bytes))
     ser.flush()
+
+def main():
+    bytes = [0]*8
+
+    for y in range(64):
+        for i in range(8):
+            bytes[i] = 0
+            for x in range(8):
+                bytes[i] <<= 1;
+                bytes[i] |= (im.getpixel((x + i*8, y)) == 0)
+                #if byte & 1:
+                #    sys.stdout.write('#')
+                #else:
+                #    sys.stdout.write(' ')
+        if ser:
+            send_bytes(bytes)
+        else:
+            print_bytes(bytes)
+        time.sleep(delay)
+	
+if device != "":
+    ser = serial.Serial(device, baudrate=115200)
+else:
+    ser = None
 
 im = Image.open(filename)
 im.draft('1', (64, 64))
 #im.show()
-bytes = [0]*8
 
-for y in range(64):
-	for i in range(8):
-		bytes[i] = 0
-		for x in range(8):
-			bytes[i] <<= 1;
-			bytes[i] |= (im.getpixel((x + i*8, y)) == 0)
-			#if byte & 1:
-			#	sys.stdout.write('#')
-			#else:
-			#	sys.stdout.write(' ')
-	print_bytes(bytes)
-	time.sleep(delay)
-	
+while True:
+    main()
+    
