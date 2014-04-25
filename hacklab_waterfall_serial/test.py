@@ -74,7 +74,7 @@ def rand():
     controller.send()
     time.sleep(delay)
 
-def pulse(on_count=1, off_count=5):
+def pulse(on_count=1, off_count=1):
     controller.set_all()
     controller.send()
     for i in range(0, on_count):
@@ -82,6 +82,30 @@ def pulse(on_count=1, off_count=5):
     controller.clear_all()
     controller.send()
     for i in range(0, off_count):
+        time.sleep(delay)
+
+def pulse2(on_count=1, off_count=1):
+    controller.set_all()
+    for i in range(0, 8) + range(16, 24) + range(32, 40) + range(48, 56):
+        controller.clear(i)
+    controller.send()
+    for i in range(0, on_count):
+        time.sleep(delay)
+
+    controller.clear_all()
+    for i in range(0, 8) + range(16, 24) + range(32, 40) + range(48, 56):
+        controller.set(i)
+    controller.send()
+    for i in range(0, off_count):
+        time.sleep(delay)
+
+def multisweep():
+    width = 20
+    for i in range(0, 64 - width):
+        controller.set_all()
+        for j in range(i, i + width):
+            controller.clear(j)
+        controller.send()
         time.sleep(delay)
 
 if device != "":
@@ -96,6 +120,10 @@ elif mode == "bounce":
     fn = bounce
 elif mode == "pulse":
     fn = pulse
+elif mode == "pulse2":
+    fn = pulse2
+elif mode == "multisweep":
+    fn = multisweep
 else:
     fn = rand
     
